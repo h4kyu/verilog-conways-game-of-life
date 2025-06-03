@@ -42,5 +42,21 @@ always @* begin
 	end
 end
 
+// clocked update and reset
+always @(posedge clk_i or negedge reset_n_i) begin
+	if (!reset_n_i) begin
+		// hard-code initial state
+		state <= {(M*N){1'b0}} |
+		(1 << (1*M + 2)) |
+		(1 << (2*M + 3)) |
+		(1 << (3*M + 1)) |
+		(1 << (3*M + 2)) |
+		(1 << (3*M + 3));
+	end else begin
+		// update state
+		state <= next_state;
+	end
+end
+
 end module
 
