@@ -23,10 +23,14 @@ always @* begin
 			for (dy = -1; dy <= 1; dy = dy + 1) begin
 				for (dx = -1; dx <= 1; dx = dx + 1) begin
 					if (dx || dy) begin // ignore (dx, dy) = (0, 0)
-						nx = (x + dx + M) % M; // ensure to skip over 
+						nx = (x + dx + M) % M; // wrap around borders
+						ny = (y + dy + N) % N;
+						count = count + state[ny*M + nx];
 					end
 				end
 			end
+
+			// apply game of life rules
 		end
 	end
 end
