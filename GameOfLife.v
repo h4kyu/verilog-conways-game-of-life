@@ -31,6 +31,13 @@ always @* begin
 			end
 
 			// apply game of life rules
+			if (state[y*M + x]) begin
+				// live cell with 2 or 3 neighbors lives on
+				next_state[y*M + x] = (count == 2 || count == 3);
+			end else begin
+				// a dead cell with 3 neighbors revives
+				next_state[y*M + x] = (count == 3);
+			end
 		end
 	end
 end
