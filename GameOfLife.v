@@ -5,7 +5,7 @@ module GameOfLife #(
 	input clk_i, 
 	input reset_n_i,
 	// row-major flattened grid of N rows by M columns
-	output reg [N*M - 1 : 0] state
+	output reg [N*M-1:0] state
 );
 
 // next_state
@@ -22,10 +22,10 @@ always @* begin
 
 			for (dy = -1; dy <= 1; dy = dy + 1) begin
 				for (dx = -1; dx <= 1; dx = dx + 1) begin
-					if (dx || dy) begin // ignore (dx, dy) = (0, 0)
+					if ((dx != 0) || (dy != 0)) begin // ignore (dx, dy) = (0, 0)
 						nx = (x + dx + M) % M; // wrap around borders
 						ny = (y + dy + N) % N;
-						count = count + state[ny*M + nx];
+						count = count + (state[ny*M + nx] ? 32'd1 : 32'd0);   // widen the 1-bit state[...] to a 32-bit integer
 					end
 				end
 			end
@@ -41,7 +41,7 @@ always @* begin
 		end
 	end
 end
-
+	
 // clocked update and reset
 always @(posedge clk_i or negedge reset_n_i) begin
 	if (!reset_n_i) begin
@@ -58,5 +58,5 @@ always @(posedge clk_i or negedge reset_n_i) begin
 	end
 end
 
-end module
+endmodule
 
