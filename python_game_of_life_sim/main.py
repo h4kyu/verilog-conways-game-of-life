@@ -1,5 +1,10 @@
 # VCD parser to display Conway's Game of Life verilog sim
 
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+
 def parse_vcd(filename):
     """
     Parses a VCD file and returns:
@@ -80,7 +85,7 @@ def display_latest_frame(vcd_file, grid_name="state", M=16, N=16):
         print(row)
 
 
-def display_animation(vcd_file, grid_name="state", M=16, N=16, generations=200):
+def display_animation(vcd_file, grid_name="state", M=16, N=16, interval=200):
     # Parse the VCD file
     var_defs, changes = parse_vcd(vcd_file)
 
@@ -97,19 +102,32 @@ def display_animation(vcd_file, grid_name="state", M=16, N=16, generations=200):
     times = sorted(
         [time for time in changes if state_id in changes[time]]
     )
-
+    frames = []
     for time in times:
         bits = changes[time][state_id]
         # reverse bit order from MSB
         bits_rev = bits[::-1]
+        # print(f"\nGame of Life @ t = {time} ps\n")
+        # for y in range(N):
+        #     row = ''.join('O' if bits_rev[y * M + x] == '1' else '.' for x in range(M))
+        #     print(row)
+        grid = np.array([1 if b=='1' else 0 for b in bits_rev]).reshape((N, M))
+        frames.append(grid)
 
-        print(f"\nGame of Life @ t = {time} ps\n")
-        for y in range(N):
-            row = ''.join('O' if bits_rev[y * M + x] == '1' else '.' for x in range(M))
-            print(row)
+    # set up plot
+    fig, ax = plt.subplots()
+    im = ax.imshow(frames[0])  # draw initial frame
+    ax.set_title(f'time = {times[0]}')
+
+    def update(i):
+        im.set_array(frames[i])
+        ax.set_title(f'time = {times[i]}')
+        return [im]
+
+    ani = FuncAnimation(fig, update, frames=len(frames), interval=100, blit=False)
+    plt.show()
 
     return
-
 
 
 vcd_path = "/Users/nahshonweissberg/repos/verilog-conways-game-of-life/build/GameOfLife.vcd"
