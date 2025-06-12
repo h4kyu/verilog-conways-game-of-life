@@ -35,7 +35,7 @@ b000...000 +
 ...
 ```
 
-Initial state as classic glider, 16x16 grid:
+Initial state as classic glider, 16x16 grid, border wrapping:
 
 ```
 		state <= {(M*N){1'b0}} |
@@ -45,5 +45,16 @@ Initial state as classic glider, 16x16 grid:
 		(1 << (3*M + 2)) |
 		(1 << (3*M + 3));
 ```
-
 ![game_of_life](https://github.com/user-attachments/assets/1e086559-1244-4be7-adf2-7f79bc932f5c)
+
+Initial state as R-pentomino, 64x64 grid, no border wrapping:
+
+```
+  		state <= {(M*N){1'b0}} |
+	    	(1 << ((r0 + 0)*M + (c0 + 1))) |
+	    	(1 << ((r0 + 0)*M + (c0 + 2))) |
+	    	(1 << ((r0 + 1)*M + (c0 + 0))) |
+	    	(1 << ((r0 + 1)*M + (c0 + 1))) |
+	    	(1 << ((r0 + 2)*M + (c0 + 1)));
+```
+![game_of_life](https://github.com/user-attachments/assets/08b9dc3a-b335-4a97-bba8-d1ef55cfeed1)
