@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from matplotlib.animation import PillowWriter
 
 
 def parse_vcd(filename):
@@ -125,7 +126,9 @@ def display_animation(vcd_file, grid_name="state", M=16, N=16, interval=200):
         return [im]
 
     ani = FuncAnimation(fig, update, frames=len(frames), interval=100, blit=False)
-    plt.show()
+    gif_writer = PillowWriter(fps=5)
+    ani.save("game_of_life.gif", writer=gif_writer)
+    # plt.show()
 
     return
 
@@ -134,4 +137,3 @@ vcd_path = "/Users/nahshonweissberg/repos/verilog-conways-game-of-life/build/Gam
 
 # display_latest_frame(vcd_path)
 display_animation(vcd_path)
-
