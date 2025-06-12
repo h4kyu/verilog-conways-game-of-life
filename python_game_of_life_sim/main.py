@@ -80,6 +80,40 @@ def display_latest_frame(vcd_file, grid_name="state", M=16, N=16):
         print(row)
 
 
+def display_animation(vcd_file, grid_name="state", M=16, N=16, generations=200):
+    # Parse the VCD file
+    var_defs, changes = parse_vcd(vcd_file)
+
+    # Find the var ID for grid
+    state_id = None
+    for vid, (name, width) in var_defs.items():
+        if name == grid_name and width == M*N:
+            state_id = vid
+            break
+    if state_id is None:
+        raise ValueError(f"Grid signal '{grid_name}' not found in VCD.")
+
+    # get frames
+    times = sorted(
+        [time for time in changes if state_id in changes[time]]
+    )
+
+    for time in times:
+        bits = changes[time][state_id]
+        # reverse bit order from MSB
+        bits_rev = bits[::-1]
+
+        print(f"\nGame of Life @ t = {time} ps\n")
+        for y in range(N):
+            row = ''.join('O' if bits_rev[y * M + x] == '1' else '.' for x in range(M))
+            print(row)
+
+    return
+
+
+
 vcd_path = "/Users/nahshonweissberg/repos/verilog-conways-game-of-life/build/GameOfLife.vcd"
 
-display_latest_frame(vcd_path)
+# display_latest_frame(vcd_path)
+display_animation(vcd_path)
+
