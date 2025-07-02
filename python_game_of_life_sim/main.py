@@ -136,4 +136,5 @@ def display_animation(vcd_file, grid_name="state", M=16, N=16, interval=200):
 vcd_path = "/Users/nahshonweissberg/repos/verilog-conways-game-of-life/build/GameOfLife.vcd"
 
 # display_latest_frame(vcd_path)
-display_animation(vcd_path)
+display_animation(vcd_path, "state", 64, 64)
+

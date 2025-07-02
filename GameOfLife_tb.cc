@@ -24,7 +24,10 @@ int sc_main(int argc, char** argv) {
     sc_signal<bool> reset_n_i;
 
     // flattened 16×16 grid
-    sc_signal< sc_bv<256> > state;
+    // sc_signal< sc_bv<256> > state;
+
+    // flattened 64×64 grid
+    sc_signal< sc_bv<4096> > state;
 
     // const std::unique_ptr<VBuffer> buffer{new VBuffer{"buffer"}};
 
